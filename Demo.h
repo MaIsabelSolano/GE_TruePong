@@ -12,7 +12,7 @@
 #include "Background.h"
 // #include "Tilemap.h"
 #include <random>
-// #include "Colliders.h"
+#include "Collider.h"
 
 
 class EntitiesSpawnSetupSystem : public SetupSystem {
@@ -22,17 +22,20 @@ class EntitiesSpawnSetupSystem : public SetupSystem {
         player->addComponent<SpriteComponentSimple>(20, 200, SDL_Color{ 255, 0, 0 });
         player->addComponent<VelocityComponent>(0, 50);
         player->addComponent<PlayerComponent>();
+        player->addComponent<BoxColliderComponent>(SDL_Rect{ 0, 0, 20, 200 }, SDL_Color{ 255, 255, 255 });
 
         Entity* ia = scene->createEntity("IA", 900, 400);
         ia->addComponent<PaddleComponent>(20, 200, SDL_Color{ 0, 255, 0 });
         ia->addComponent<SpriteComponentSimple>(20, 200, SDL_Color{ 0, 255, 0 });
         ia->addComponent<VelocityComponent>(0, 50);
         ia->addComponent<PC>();
+        ia->addComponent<BoxColliderComponent>(SDL_Rect{ 0, 0, 20, 200 }, SDL_Color{ 255, 255, 255 });
         
         Entity* ball = scene->createEntity("BALL", 50, 50);
         ball->addComponent<BallComponent>(30, 30, SDL_Color{ 0, 0, 255 });
         ball->addComponent<SpriteComponentSimple>(30, 30, SDL_Color{ 0, 0, 255 });
         ball->addComponent<VelocityComponent>(150, 150);
+        ball->addComponent<BoxColliderComponent>(SDL_Rect{ 0, 0, 30, 30 }, SDL_Color{ 255, 255, 255 });
 
     }
 };
@@ -165,6 +168,8 @@ public:
         addUpdateSystem<MovementSystem>(sampleScene);
         addUpdateSystem<PaddleMovementSystem>(sampleScene);
         addUpdateSystem<WallHitSystem>(sampleScene);
+        addUpdateSystem<CollisionDetectionSystem>(sampleScene);
+        addUpdateSystem<CollisionSystem>(sampleScene);
         //// addUpdateSystem<CollisionSystem>(sampleScene);
         //addUpdateSystem<SpriteAnimationSystem>(sampleScene);
         //addUpdateSystem<SpriteMovementSystem>(sampleScene);
@@ -180,7 +185,7 @@ public:
         //addRenderSystem<TilemapRenderSystem>(sampleScene);
         //addRenderSystem<SpriteRenderSystem>(sampleScene);
         //// addUpdateSystem<GameStateSystem>(sampleScene);
-        //addRenderSystem<ColliderRenderSystem>(sampleScene);
+        addRenderSystem<ColliderRenderSystem>(sampleScene);
 
         setScene(sampleScene);
     }
